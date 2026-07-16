@@ -8,27 +8,95 @@ public class CustomerService {
         // var cs = new CustomerService(10);
         // Console.WriteLine(cs);
 
+        // Inputs because I got lazy and tired of typing them in over and over.
+        string input = string.Join(Environment.NewLine,
+            "Mario", "913", "Ran out of mushrooms",
+            "Luigi", "714", "House is haunted",
+            "Wario", "1021", "Shouldn't be here?"
+        );
+
+        Console.SetIn(new StringReader(input));
+
         // Test Cases
 
         // Test 1
-        // Scenario: 
-        // Expected Result: 
-        Console.WriteLine("Test 1");
+        // Scenario: Creates Queue then stores the max size.
+        // Expected Result: Prints max queue size, in this case 2.
+        Console.WriteLine("Test 1: Takes Max Queue Size");
+        var mainTest = new CustomerService(2);
+        Console.WriteLine($"\nQueue Max Size: {mainTest._maxSize}");
+        Console.WriteLine("\nHope the above line said '2', otherwise you bungled it.");
 
-        // Defect(s) Found: 
+        // Defect(s) Found: None
+
+        Console.WriteLine("=================");
+
+        // Test 1.5
+        // Scenario: Sets max queue size to 10 if the number given is invalid.
+        // Expected Result: Prints max queue size, in this case 10.
+        Console.WriteLine("Test 1.5: Defaults Max Queue on invalid value");
+        var badQueue = new CustomerService(-3);
+        Console.WriteLine($"\nQueue Max Size: {badQueue._maxSize}");
+        Console.WriteLine("\nHope the above line said '10', otherwise you bungled it.");
+
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
         // Test 2
-        // Scenario: 
-        // Expected Result: 
-        Console.WriteLine("Test 2");
+        // Scenario: Successfully adds 2 customers to the queue. 
+        // Expected Result: Prints customer's info, and size of queue which should be 2.
+        mainTest.AddNewCustomer();        
+        mainTest.AddNewCustomer();       
+        Console.WriteLine($"\nQueue Size: {mainTest._queue.Count()}");
+        foreach (Customer item in mainTest._queue)
+        {
+            Console.WriteLine(item.ToString());
+        }
+        Console.WriteLine("\nHope the above printed a size of 2 and all the customer info, otherwise you bungled it.");
 
-        // Defect(s) Found: 
+        // Defect(s) Found: None
 
         Console.WriteLine("=================");
 
-        // Add more Test Cases As Needed Below
+        // Test 3
+        // Scenario: Throws error if you try to add a customer when the queue is full.
+        // Expected Result: Throws error.
+        Console.WriteLine("Test 3: Enforcing Queue Limits");
+        mainTest.AddNewCustomer();
+        
+        Console.WriteLine("\nHope you got that error message, otherwise you bungled it.");
+
+        // Defect(s) Found: Added 3rd customer to queue. FIXED: Changed > to >=
+
+        Console.WriteLine("=================");
+        
+        // Test 4
+        // Scenario: Successfully dequeues a customer, displaying their info.
+        // Expected Result: Dequeues a customer, printing their info, before printing the new queue size (which should be 1).
+        Console.WriteLine("Test 4: 'ServeCustomer' Does Its Job");
+        mainTest.ServeCustomer();
+        Console.WriteLine($"\nQueue Size: {mainTest._queue.Count()}");
+
+        Console.WriteLine("\nHope it printed the serviced customer info and then a size of 1, otherwise you bungled it.");
+
+        // Defect(s) Found: Printed info for customer after serviced one. FIXED: Swapped teh spots of grabbing the customers info and removing them from the queue.
+
+        Console.WriteLine("=================");
+        
+        // Test 5
+        // Scenario: Services remaining customer, then prints an error when it tries to service again.
+        // Expected Result: Dequeues a customer, printing their info, before throwing an error.
+        Console.WriteLine("Test 5: Can't Serve What Ain't There");
+        mainTest.ServeCustomer();
+        mainTest.ServeCustomer();
+
+        Console.WriteLine("\nHope it printed the serviced customer info and then an error, otherwise you bungled it.");
+        
+        // Defect(s) Found: Caused an exception instead of in-program error message.
+
+        Console.WriteLine("=================");
+        
     }
 
     private readonly List<Customer> _queue = new();
@@ -67,7 +135,7 @@ public class CustomerService {
     /// </summary>
     private void AddNewCustomer() {
         // Verify there is room in the service queue
-        if (_queue.Count > _maxSize) {
+        if (_queue.Count >= _maxSize) {
             Console.WriteLine("Maximum Number of Customers in Queue.");
             return;
         }
@@ -88,8 +156,14 @@ public class CustomerService {
     /// Dequeue the next customer and display the information.
     /// </summary>
     private void ServeCustomer() {
-        _queue.RemoveAt(0);
+        if (_queue.Count() == 0)
+        {
+            Console.WriteLine("No Customers in Queue");
+            return;
+        }
+
         var customer = _queue[0];
+        _queue.RemoveAt(0);
         Console.WriteLine(customer);
     }
 
