@@ -4,10 +4,29 @@ public class Program
 {
     static void Main(string[] args)
     {
-        // This project is here for you to use as a "Sandbox" to play around
-        // with any code or ideas you have that do not directly apply to
-        // one of your projects.
+        bool check = IsAnagram("CAT", "TAC");
+        Console.WriteLine(check);
+    }
 
-        Console.WriteLine("Hello Sandbox World!");
+    public static bool IsAnagram(string word1, string word2)
+    {
+        word1 = word1.ToLower().Replace(" ","");
+        char[] chars1 = word1.ToCharArray();
+        word2 = word2.ToLower().Replace(" ","");
+        char[] chars2 = word2.ToCharArray();
+
+        Array.Sort(chars1);
+        word1 = new string(chars1);
+        Array.Sort(chars2);
+        word2 = new string(chars2);
+
+        if (word1 == word2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
